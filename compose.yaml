@@ -1,0 +1,32 @@
+name: data-platform-rustfs
+
+services:
+  rustfs:
+    image: rustfs/rustfs:1.0.0-rc.6-glibc
+    container_name: rustfs
+    restart: unless-stopped
+
+    ports:
+      - "${RUSTFS_API_PORT:-9000}:9000"
+      - "${RUSTFS_CONSOLE_PORT:-9001}:9001"
+
+    environment:
+      RUSTFS_ACCESS_KEY: ${RUSTFS_ACCESS_KEY:-RUSTFSADMIN01}
+      RUSTFS_SECRET_KEY: ${RUSTFS_SECRET_KEY:-change-this-to-a-long-random-secret}
+      RUSTFS_LOG_LEVEL: ${RUSTFS_LOG_LEVEL:-error}
+
+    volumes:
+      - rustfs_data:/data
+
+    networks:
+      data-platform-network:
+        aliases:
+          - rustfs
+
+volumes:
+  rustfs_data:
+
+networks:
+  data-platform-network:
+    external: true
+    name: ${DATA_PLATFORM_NETWORK:-data-platform-network}
